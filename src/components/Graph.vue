@@ -26,4 +26,11 @@ const props = defineProps<{
   nodes: Node[];
   relationships: Relationship[];
 }>();
+
+const handleNodeCreated = (newNode: Node) => {
+  // Add the new node to the list of nodes
+  nodes.value.push(newNode);
+
+  // Perform any other necessary actions, such as updating relationships
+};
 </script>

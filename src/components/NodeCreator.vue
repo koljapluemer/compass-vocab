@@ -10,6 +10,8 @@
 import { ref } from 'vue';
 import { Node } from '@/types/Node';
 
+const emit = defineEmits(['node-created']);
+
 const front = ref('');
 const back = ref('');
 
