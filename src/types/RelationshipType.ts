@@ -1,10 +1,10 @@
 export enum RelationshipType {
     PARENT = "PARENT",
-    MNEMONIC = "MNEMONIC",
+    TYPE = "TYPE",
     RELATED = "RELATED",
     EXAMPLE = "EXAMPLE",
     CHILD = "CHILD",
-    CONFUSING = "CONFUSING",
+    CONFUSABLE = "CONFUSABLE",
     OPPOSITE = "OPPOSITE",
-    CONCORDANCE = "CONCORDANCE",
+    RHYME = "RHYME",
 }

@@ -2,7 +2,8 @@ import { Relationship } from "./Relationship";
 
 export interface Node {
     id: string;
-    connectedNodes: Map<string, Relationship[]>;
+    connectedNodes: Relationship[];
     front: string;
     back: string;
+    info: string;
 }

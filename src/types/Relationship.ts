@@ -1,4 +1,6 @@
+import { RelationshipType } from "./RelationshipType";
+
 export interface Relationship {
-    type: string;
+    type: RelationshipType;
     connectedNode: Node;
 }
