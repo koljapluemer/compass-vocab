@@ -1,0 +1,25 @@
+{
+  "name": "compass-vocab",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.2.36"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/cli-plugin-typescript": "~4.5.14",
+    "@vue/test-utils": "^2.4.1",
+    "autoprefixer": "^10.4.14",
+    "daisyui": "^3.5.1",
+    "jsdom": "^22.1.0",
+    "postcss": "^8.4.27",
+    "start-server-and-test": "^2.0.0",
+    "tailwindcss": "^3.3.3",
+    "vite": "^4.4.6"
+  }
+}
