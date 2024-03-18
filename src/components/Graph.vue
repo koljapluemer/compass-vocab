@@ -37,6 +37,41 @@ const createRelationship = (
 
   // Add the relationship to the first node's connected nodes
   firstNode.connectedNodes.push(newRelationship);
+
+  // Handle reverse relationships
+  // if related, type, confusable, opposite or rhyme, add the same relationship to the second node
+  if (
+    relationshipType === "RELATED" ||
+    relationshipType === "CONFUSABLE" ||
+    relationshipType === "OPPOSITE" ||
+    relationshipType === "GOES_WITH" || 
+    relationshipType === "RHYME"
+  ) {
+    const newRelationshipForSecondNode: Relationship = {
+      type: relationshipType,
+      connectedNode: firstNode,
+    };
+
+    secondNode.connectedNodes.push(newRelationshipForSecondNode);
+  }
+  // if parent or example, add first node as a child of the second node
+  if (relationshipType === "PARENT" || relationshipType === "EXAMPLE") {
+    const newRelationshipForSecondNode: Relationship = {
+      type: "CHILD",
+      connectedNode: firstNode,
+    };
+
+    secondNode.connectedNodes.push(newRelationshipForSecondNode);
+  }
+  // if child, add second node as a parent of the first node
+  if (relationshipType === "CHILD") {
+    const newRelationshipForSecondNode: Relationship = {
+      type: "PARENT",
+      connectedNode: firstNode,
+    };
+
+    secondNode.connectedNodes.push(newRelationshipForSecondNode);
+  }
 };
 
 const changeCurrentNodeTo = (node: Node) => {
@@ -137,7 +172,7 @@ const setupExample = () => {
   // #9 is ryhme with #1
   createRelationship(exampleNotes[0], exampleNotes[8], "RHYME");
   // #10 is a type of #1
-  createRelationship(exampleNotes[0], exampleNotes[9], "TYPE");
+  createRelationship(exampleNotes[0], exampleNotes[9], "GOES_WITH");
 };
 
 setupExample();

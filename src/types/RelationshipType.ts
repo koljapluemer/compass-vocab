@@ -1,6 +1,6 @@
 export enum RelationshipType {
     PARENT = "PARENT",
-    TYPE = "TYPE",
+    GOES_WITH = "GOES_WITH",
     RELATED = "RELATED",
     EXAMPLE = "EXAMPLE",
     CHILD = "CHILD",

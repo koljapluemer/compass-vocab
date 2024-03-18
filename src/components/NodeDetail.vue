@@ -1,7 +1,7 @@
 <template>
   <Transition name="generic-fade">
     <div class="grid grid-cols-6 gap-4 m-4" :key="props.node.id">
-      <!-- concordances, parents, TYPE, opposite, main, related, confusables, children, variations -->
+      <!-- concordances, parents, GOES_WITH, opposite, main, related, confusables, children, variations -->
       <div class="flex gap-2 text-right">
         <NodePreview
           v-for="node in getRelatedNodesOfType('EXAMPLE')"
@@ -20,10 +20,10 @@
       </div>
       <div class="flex gap-2 justify-end items-start">
         <NodePreview
-          v-for="node in getRelatedNodesOfType('TYPE')"
+          v-for="node in getRelatedNodesOfType('GOES_WITH')"
           :node="node"
         />
-        <small>Types</small>
+        <small>Goes With</small>
       </div>
       <div class="flex gap-2 justify-center items-end text-right">
         <small>Opposites </small>
@@ -55,14 +55,14 @@
         />
       </div>
       <div class="col-span-4 flex gap-2 items-center text-center">
-        <small>Child </small>
+        <small>Children </small>
         <NodePreview
           v-for="node in getRelatedNodesOfType('CHILD')"
           :node="node"
         />
       </div>
       <div class="flex gap-2 items-start justify-start">
-        <small>Rhyme</small>
+        <small>Rhymes</small>
         <NodePreview
           v-for="node in getRelatedNodesOfType('RHYME')"
           :node="node"
