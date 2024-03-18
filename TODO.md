@@ -1,1 +1,2 @@
 - build an MVP :)
+- add optional filed why relationship is one/descriptor

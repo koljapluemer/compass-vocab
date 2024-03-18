@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from "vue";
+import { ref, defineProps, provide } from "vue";
 import { Node } from "@/types/Node";
 import { Relationship } from "@/types/Relationship";
 import NodeDetail from "./NodeDetail.vue";
@@ -38,6 +38,12 @@ const createRelationship = (
   // Add the relationship to the first node's connected nodes
   firstNode.connectedNodes.push(newRelationship);
 };
+
+const changeCurrentNodeTo = (node: Node) => {
+  currentNode.value = node;
+};
+
+provide("changeCurrentNodeTo", changeCurrentNodeTo);
 
 const exampleNotes: Node[] = [
   {
