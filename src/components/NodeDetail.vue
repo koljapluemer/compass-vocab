@@ -73,12 +73,12 @@
 </template>
 
 <script setup lang="ts">
-import Node from "@/types/Node";
+import VocabNode from "@/types/VocabNode";
 import NodePreview from "./NodePreview.vue";
 import { ref, defineProps, computed } from "vue";
 
 const props = defineProps<{
-  node: Node;
+  node: VocabNode;
 }>();
 
 // Define a computed property to get related nodes of a specific type for the current node

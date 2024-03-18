@@ -1,6 +1,8 @@
 import { RelationshipType } from "./RelationshipType";
+import { VocabNode } from "./VocabNode.ts";
 
 export interface Relationship {
     type: RelationshipType;
-    connectedNode: Node;
+    connectedNode: VocabNode;
+    description: string;
 }

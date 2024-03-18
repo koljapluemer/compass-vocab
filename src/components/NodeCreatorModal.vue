@@ -1,5 +1,5 @@
 <template>
-  <button class="btn" @click="toggleModal">Create New Node</button>
+  <button class="btn" @click="toggleModal">Create New VocabNode</button>
 
   <div class="modal" :class="{ 'modal-open': showModal }">
     <div class="modal-box">
@@ -19,7 +19,7 @@
       </p>
       <div class="modal-action">
         <button class="btn" @click="toggleModal">Close</button>
-        <button class="btn btn-primary" @click="createNode">Create Node</button>
+        <button class="btn btn-primary" @click="createNode">Create VocabNode</button>
       </div>
     </div>
   </div>
@@ -27,7 +27,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { Node } from "@/types/Node";
+import { VocabNode } from "@/types/VocabNode";
 
 const showModal = ref(false);
 
@@ -46,7 +46,7 @@ const createNode = () => {
     return;
   }
 
-  const newNode: Node = {
+  const newNode: VocabNode = {
     id: generateNodeId(), // You need to define a function to generate unique IDs
     connectedNodes: new Map(),
     front: front.value,

@@ -7,17 +7,37 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, provide } from "vue";
-import { Node } from "@/types/Node";
+import { ref, defineProps, provide, watch, onMounted } from "vue";
+import { VocabNode } from "@/types/VocabNode";
 import { Relationship } from "@/types/Relationship";
 import NodeDetail from "./NodeDetail.vue";
 import NodeCreatorModal from "./NodeCreatorModal.vue";
+import { saveNodesToLocalStorage, loadNodesFromLocalStorage } from '@/utils/nodeStorage';
 
-const nodes = ref<Node[]>([]); // Assuming nodes are stored in a ref
+const nodes = ref<VocabNode[]>([]); // Assuming nodes are stored in a ref
+const currentNode = ref<VocabNode | null>(null);
 
-const currentNode = ref<Node | null>(null);
+// Load nodes from localStorage when the component is mounted
+// onMounted(() => {
+//   const savedNodes = loadNodesFromLocalStorage();
+//   nodes.value = savedNodes;
+//   console.log('Nodes loaded from local storage:', nodes.value);
+//   // open random node
+//   if (nodes.value.length > 0) {
+//     currentNode.value = nodes.value[Math.floor(Math.random() * nodes.value.length)];
+//   }
+// });
 
-const handleNodeCreated = (newNode: Node) => {
+// Save nodes to localStorage whenever nodes change
+watch(nodes, (newValue) => {
+  // if empty array, don't save
+  if (newValue.length === 0) return;
+  console.log('Nodes changed, saving to local storage');
+  saveNodesToLocalStorage(newValue);
+});
+
+const handleNodeCreated = (newNode: VocabNode) => {
+  console.log('New node created:', newNode);
   // Add the new node to the list of nodes
   nodes.value.push(newNode);
 
@@ -26,8 +46,8 @@ const handleNodeCreated = (newNode: Node) => {
 
 // Create a function to establish a relationship between two nodes
 const createRelationship = (
-  firstNode: Node,
-  secondNode: Node,
+  firstNode: VocabNode,
+  secondNode: VocabNode,
   relationshipType: RelationshipType
 ) => {
   const newRelationship: Relationship = {
@@ -44,7 +64,7 @@ const createRelationship = (
     relationshipType === "RELATED" ||
     relationshipType === "CONFUSABLE" ||
     relationshipType === "OPPOSITE" ||
-    relationshipType === "GOES_WITH" || 
+    relationshipType === "GOES_WITH" ||
     relationshipType === "RHYME"
   ) {
     const newRelationshipForSecondNode: Relationship = {
@@ -74,56 +94,55 @@ const createRelationship = (
   }
 };
 
-const changeCurrentNodeTo = (node: Node) => {
+
+const changeCurrentNodeTo = (node: VocabNode) => {
   currentNode.value = node;
 };
 
 provide("changeCurrentNodeTo", changeCurrentNodeTo);
 
-const exampleNotes: Node[] = [
+const exampleNotes: VocabNode[] = [
   {
     id: "1",
     connectedNodes: [],
     front: "bicycle",
     back: "بـِسكيلـِتّـَة",
-    info: "biskeelitta"
+    info: "biskeelitta",
   },
   {
     id: "2",
     connectedNodes: [],
     front: "vehicle",
     back: " و َسيلـِة ا ِلنـَقل",
-    info: "waseelit ilna'l"
-
+    info: "waseelit ilna'l",
   },
   {
     id: "3",
     connectedNodes: [],
     front: "pedestrian",
     back: "مَشـاة ",
-    info: "mushaet"
+    info: "mushaet",
   },
   {
     id: "4",
     connectedNodes: [],
     front: "car",
     back: " عـَر َبـِيـَة",
-    info: "3arabiyya"
+    info: "3arabiyya",
   },
   {
     id: "5",
     connectedNodes: [],
     front: "wheel",
     back: " عـَجـَل",
-    info: "3agal"
+    info: "3agal",
   },
   {
     id: "6",
     connectedNodes: [],
     front: "This bicycle is mine",
     back: " البسكلتة دي بتاعتي. ",
-    info: "albiskeelitta di bta3ti"
-
+    info: "albiskeelitta di bta3ti",
   },
   {
     id: "7",
@@ -148,7 +167,7 @@ const exampleNotes: Node[] = [
     connectedNodes: [],
     back: "أحمـَر",
     front: "red",
-  }
+  },
 ];
 
 const setupExample = () => {
@@ -177,5 +196,3 @@ const setupExample = () => {
 
 setupExample();
 </script>
-
-

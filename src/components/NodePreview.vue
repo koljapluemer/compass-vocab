@@ -5,11 +5,11 @@
 </template>
 
 <script setup lang="ts">
-import Node from "@/types/Node";
+import VocabNode from "@/types/VocabNode";
 import { ref, defineProps, emit, inject } from "vue";
 
 const props = defineProps<{
-  node: Node;
+  node: VocabNode;
 }>();
 
 // changeCurrentNodeTo
