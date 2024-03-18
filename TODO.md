@@ -2,3 +2,4 @@
 - add optional filed why relationship is one/descriptor
 - add global store and make sure it syncs against local
 - redo the whole damn project because you cannot possibly persist these complex maps and whatever, apparently
+    - use as oppo to use https://dash14.github.io/v-network-graph/examples/basic.html

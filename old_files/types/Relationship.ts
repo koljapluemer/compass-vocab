@@ -1,4 +1,4 @@
-import { RelationshipType } from "./RelationshipType";
+import { RelationshipType } from "./RelationshipType.ts";
 import { VocabNode } from "./VocabNode.ts";
 
 export interface Relationship {

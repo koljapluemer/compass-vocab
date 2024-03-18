@@ -7,7 +7,6 @@ export const useNodeStore = defineStore({
   state: () => ({
     nodes: [] as VocabNode[],
   }),
-  persist: true,
   actions: {
     addNode(node: VocabNode) {
       this.nodes.push(node);

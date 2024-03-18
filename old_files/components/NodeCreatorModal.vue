@@ -1,5 +1,5 @@
 <template>
-  <button class="btn" @click="toggleModal">Create New VocabNode</button>
+  <button class="btn fixed bottom-3 right-14 " @click="toggleModal">Create New Vocab Node</button>
 
   <div class="modal" :class="{ 'modal-open': showModal }">
     <div class="modal-box">
