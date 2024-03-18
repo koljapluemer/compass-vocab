@@ -12,34 +12,16 @@ import { VocabNode } from "@/types/VocabNode";
 import { Relationship } from "@/types/Relationship";
 import NodeDetail from "./NodeDetail.vue";
 import NodeCreatorModal from "./NodeCreatorModal.vue";
-import { saveNodesToLocalStorage, loadNodesFromLocalStorage } from '@/utils/nodeStorage';
 
-const nodes = ref<VocabNode[]>([]); // Assuming nodes are stored in a ref
+
 const currentNode = ref<VocabNode | null>(null);
 
-// Load nodes from localStorage when the component is mounted
-// onMounted(() => {
-//   const savedNodes = loadNodesFromLocalStorage();
-//   nodes.value = savedNodes;
-//   console.log('Nodes loaded from local storage:', nodes.value);
-//   // open random node
-//   if (nodes.value.length > 0) {
-//     currentNode.value = nodes.value[Math.floor(Math.random() * nodes.value.length)];
-//   }
-// });
-
-// Save nodes to localStorage whenever nodes change
-watch(nodes, (newValue) => {
-  // if empty array, don't save
-  if (newValue.length === 0) return;
-  console.log('Nodes changed, saving to local storage');
-  saveNodesToLocalStorage(newValue);
-});
+import { useNodeStore } from "@/store/pinia";
+const store = useNodeStore();
 
 const handleNodeCreated = (newNode: VocabNode) => {
-  console.log('New node created:', newNode);
   // Add the new node to the list of nodes
-  nodes.value.push(newNode);
+  store.addNode(newNode);
 
   // Perform any other necessary actions, such as updating relationships (TODO)
 };
@@ -94,14 +76,13 @@ const createRelationship = (
   }
 };
 
-
 const changeCurrentNodeTo = (node: VocabNode) => {
   currentNode.value = node;
 };
 
 provide("changeCurrentNodeTo", changeCurrentNodeTo);
 
-const exampleNotes: VocabNode[] = [
+const exampleNodes: VocabNode[] = [
   {
     id: "1",
     connectedNodes: [],
@@ -171,28 +152,31 @@ const exampleNotes: VocabNode[] = [
 ];
 
 const setupExample = () => {
-  nodes.value = exampleNotes;
-  currentNode.value = exampleNotes[0];
+  // loop example nodes and add them to the store
+  exampleNodes.forEach((node) => {
+    store.addNode(node);
+  });
   // create connections
   // #2 is a parent of #1
-  createRelationship(exampleNotes[0], exampleNotes[1], "PARENT");
+  createRelationship(exampleNodes[0], exampleNodes[1], "PARENT");
   // #3 is related to #1
-  createRelationship(exampleNotes[0], exampleNotes[2], "RELATED");
+  createRelationship(exampleNodes[0], exampleNodes[2], "RELATED");
   // #4 is opposite of #1
-  createRelationship(exampleNotes[0], exampleNotes[3], "OPPOSITE");
+  createRelationship(exampleNodes[0], exampleNodes[3], "OPPOSITE");
   // #5 is a child of #1
-  createRelationship(exampleNotes[0], exampleNotes[4], "CHILD");
+  createRelationship(exampleNodes[0], exampleNodes[4], "CHILD");
   // #6 is a concordance of #1
-  createRelationship(exampleNotes[0], exampleNotes[5], "EXAMPLE");
+  createRelationship(exampleNodes[0], exampleNodes[5], "EXAMPLE");
   // #7 is a concordance of #1
-  createRelationship(exampleNotes[0], exampleNotes[6], "EXAMPLE");
+  createRelationship(exampleNodes[0], exampleNodes[6], "EXAMPLE");
   // #8 is confusable with #1
-  createRelationship(exampleNotes[0], exampleNotes[7], "CONFUSABLE");
+  createRelationship(exampleNodes[0], exampleNodes[7], "CONFUSABLE");
   // #9 is ryhme with #1
-  createRelationship(exampleNotes[0], exampleNotes[8], "RHYME");
+  createRelationship(exampleNodes[0], exampleNodes[8], "RHYME");
   // #10 is a type of #1
-  createRelationship(exampleNotes[0], exampleNotes[9], "GOES_WITH");
+  createRelationship(exampleNodes[0], exampleNodes[9], "GOES_WITH");
 };
 
-setupExample();
+// setupExample();
+currentNode.value = store.nodes[0];
 </script>

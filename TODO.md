@@ -1,2 +1,4 @@
 - build an MVP :)
 - add optional filed why relationship is one/descriptor
+- add global store and make sure it syncs against local
+- redo the whole damn project because you cannot possibly persist these complex maps and whatever, apparently
