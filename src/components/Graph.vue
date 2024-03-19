@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as vNG from "v-network-graph";
-import { reactive } from "vue";
+import { reactive, computed, ref } from "vue";
 
 import {
   ForceLayout,
@@ -8,19 +8,19 @@ import {
   ForceEdgeDatum,
 } from "v-network-graph/lib/force-layout";
 
-const nodes = {
+const nodes = ref({
   node1: { name: "بـِسكيلـِتّـَة — bicycle" },
   node2: { name: "و َسيلـِة ا ِلنـَقل" },
-  node3: { name: "مَشـاة " },
+  node3: { name: "مَشـاة  " },
   node4: { name: "عـَر َبـِيـَة" },
   node5: { name: "عـَجـَل" },
   node6: { name: "البسكلتة دي بتاعتي." },
   node7: { name: "السيارات حلت محل الدراجات." },
   node8: { name: "عا َلـَة" },
   node9: { name: "محفلّة" },
-};
+});
 
-const edges = {
+const edges = ref({
   edge1: { source: "node1", target: "node2", label: "PARENT" },
   edge2: { source: "node1", target: "node3", label: "RELATED" },
   edge3: { source: "node1", target: "node4", label: "OPPOSITE" },
@@ -30,52 +30,69 @@ const edges = {
   edge7: { source: "node1", target: "node8", label: "CONFUSABLE" },
   edge8: { source: "node1", target: "node9", label: "RHYME" },
   edge9: { source: "node1", target: "node10", label: "GOES_WITH" },
-};
+});
 
-const initialConfigs = vNG.defineConfigs({
-  view: {
-    layoutHandler: new ForceLayout({
-      positionFixedByDrag: false,
-      positionFixedByClickWithAltKey: true,
-      createSimulation: (d3, nodes, edges) => {
-        // d3-force parameters
-        const forceLink = d3
-          .forceLink<ForceNodeDatum, ForceEdgeDatum>(edges)
-          .id((d) => d.id);
-        return d3
-          .forceSimulation(nodes)
-          .force("edge", forceLink.distance(40).strength(0.5))
-          .force("charge", d3.forceManyBody().strength(-800))
-          .force("center", d3.forceCenter().strength(0.05))
-          .alphaMin(0.001);
-      },
-    }),
-  },
-  node: {
-    normal: {
-      color: "#aabbff",
-    },
-  },
-  edge: {
-    normal: {
-      color: "#77bff2",
-    },
-    hover: {
-      color: "#368fce",
-    },
-    margin: 4,
-    marker: {
-      target: { type: "arrow" },
-    },
-    gap: 10,
-    keepOrder: "clock",
+const d3ForceEnabled = computed({
+  get: () => configs.view.layoutHandler instanceof ForceLayout,
+  set: (value: boolean) => {
+    if (value) {
+      configs.view.layoutHandler = new ForceLayout();
+    } else {
+      configs.view.layoutHandler = new vNG.SimpleLayout();
+    }
   },
 });
 
-const configs = reactive(initialConfigs);
+const layoutHandler: vNG.LayoutHandler = new ForceLayout();
+
+const configs = reactive(
+  vNG.defineConfigs({
+    view: {
+      layoutHandler,
+    },
+    node: {
+      normal: {
+        color: "#aabbff",
+      },
+    },
+    edge: {
+      label: {
+        fontSize: 8,
+        // TODO: autoset to same color as edge
+        color: "#77bff2"
+      },
+      normal: {
+        color: "#77bff2",
+      },
+      hover: {
+        color: "#368fce",
+      },
+
+      margin: 12,
+      marker: {
+        target: { type: "arrow" },
+      },
+    },
+  })
+);
 </script>
 
 <template>
+  <div class="demo-control-panel">
+    <div class="form-control">
+      <label class="label cursor-pointer">
+        <input
+          type="checkbox"
+          checked="checked"
+          class="checkbox"
+          v-model="d3ForceEnabled"
+        />
+
+        <span class="ml-2 label-text">Enable Force Layout</span>
+      </label>
+    </div>
+  </div>
+
   <v-network-graph
     class="graph"
     :nodes="nodes"
