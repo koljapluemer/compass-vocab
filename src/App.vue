@@ -1,6 +1,5 @@
 <template>
   <Graph />
-  <ArrowTest />
 </template>
 
 <script setup>

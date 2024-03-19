@@ -2,6 +2,12 @@
 import * as vNG from "v-network-graph";
 import { reactive } from "vue";
 
+import {
+  ForceLayout,
+  ForceNodeDatum,
+  ForceEdgeDatum,
+} from "v-network-graph/lib/force-layout";
+
 const nodes = {
   node1: { name: "بـِسكيلـِتّـَة — bicycle" },
   node2: { name: "و َسيلـِة ا ِلنـَقل" },
@@ -27,6 +33,24 @@ const edges = {
 };
 
 const initialConfigs = vNG.defineConfigs({
+  view: {
+    layoutHandler: new ForceLayout({
+      positionFixedByDrag: false,
+      positionFixedByClickWithAltKey: true,
+      createSimulation: (d3, nodes, edges) => {
+        // d3-force parameters
+        const forceLink = d3
+          .forceLink<ForceNodeDatum, ForceEdgeDatum>(edges)
+          .id((d) => d.id);
+        return d3
+          .forceSimulation(nodes)
+          .force("edge", forceLink.distance(40).strength(0.5))
+          .force("charge", d3.forceManyBody().strength(-800))
+          .force("center", d3.forceCenter().strength(0.05))
+          .alphaMin(0.001);
+      },
+    }),
+  },
   node: {
     normal: {
       color: "#aabbff",
