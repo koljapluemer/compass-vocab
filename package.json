@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "d3-force": "^3.0.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "v-network-graph": "^0.9.15",

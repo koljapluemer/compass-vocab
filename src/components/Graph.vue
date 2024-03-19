@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import * as vNG from "v-network-graph";
+import { reactive } from "vue";
+
 const nodes = {
   node1: { name: "بـِسكيلـِتّـَة — bicycle" },
   node2: { name: "و َسيلـِة ا ِلنـَقل" },
@@ -22,10 +25,48 @@ const edges = {
   edge8: { source: "node1", target: "node9", label: "RHYME" },
   edge9: { source: "node1", target: "node10", label: "GOES_WITH" },
 };
+
+const initialConfigs = vNG.defineConfigs({
+  node: {
+    normal: {
+      color: "#aabbff",
+    },
+  },
+  edge: {
+    normal: {
+      color: "#77bff2",
+    },
+    hover: {
+      color: "#368fce",
+    },
+    margin: 4,
+    marker: {
+      target: { type: "arrow" },
+    },
+    gap: 10,
+    keepOrder: "clock",
+  },
+});
+
+const configs = reactive(initialConfigs);
 </script>
 
 <template>
-  <v-network-graph class="graph" :nodes="nodes" :edges="edges" />
+  <v-network-graph
+    class="graph"
+    :nodes="nodes"
+    :edges="edges"
+    :configs="configs"
+  >
+    <template #edge-label="{ edge, ...slotProps }">
+      <v-edge-label
+        :text="edge.label"
+        align="center"
+        vertical-align="above"
+        v-bind="slotProps"
+      />
+    </template>
+  </v-network-graph>
 </template>
 
 <style>
