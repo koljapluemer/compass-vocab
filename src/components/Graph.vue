@@ -19,6 +19,7 @@ const nodes = ref({
   node7: { name: "السيارات حلت محل الدراجات." },
   node8: { name: "عا َلـَة" },
   node9: { name: "محفلّة" },
+  node10: { name: "أحمـَر" },
 });
 
 const edges = ref({

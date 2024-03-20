@@ -7,13 +7,13 @@
     <div class="modal-box">
       <p class="py-4">
         <input
-          v-model="node.name"
+          v-model="name"
           class="input"
           type="text"
           placeholder="Front side (native lang)"
         />
         <input
-          v-model="node.translation"
+          v-model="translation"
           type="text"
           class="input"
           placeholder="Back side (target lang)"
@@ -41,21 +41,29 @@ function toggleModal(): void {
 
 const emit = defineEmits(["node-created"]);
 
-const nodeWithEmptyData: VocabNode = {
-  name: "",
-  translation: "",
-  info: "",
-  imgLink: "",
-  learningData: {},
-};
-const node = ref<VocabNode>(nodeWithEmptyData);
+
+const name = ref("");
+const translation = ref("");
+const info = ref("");
+const imgLink = ref("");
 
 const createNode = () => {
+  const newNode: VocabNode = {
+    name: name.value,
+    translation: translation.value,
+    info: info.value,
+    imgLink: imgLink.value,
+    learningData: {}
+  };
   // Emit an event with the newly created node data
-  emit("node-created", node.value);
+  emit("node-created", newNode);
 
   // Clear input fields after creating the node
-  node.value = nodeWithEmptyData;
+  name.value = "";
+  translation.value = "";
+  info.value = "";
+  imgLink.value = "";
+
 };
 
 
