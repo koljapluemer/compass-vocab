@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as vNG from "v-network-graph";
-import { reactive, computed, ref } from "vue";
+import { reactive, computed, ref, onMounted } from "vue";
 import NodeCreatorModal from "./NodeCreatorModal.vue";
 
 import {
@@ -9,7 +9,18 @@ import {
   ForceEdgeDatum,
 } from "v-network-graph/lib/force-layout";
 
-const nodes = ref({
+const relationshipTypes = [
+  "PARENT",
+  "GOES_WITH",
+  "RELATED",
+  "EXAMPLE",
+  "CHILD",
+  "CONFUSABLE",
+  "OPPOSITE",
+  "RHYME",
+];
+
+const exampleNodes = {
   node1: { name: "بـِسكيلـِتّـَة — bicycle" },
   node2: { name: "و َسيلـِة ا ِلنـَقل" },
   node3: { name: "مَشـاة  " },
@@ -20,9 +31,9 @@ const nodes = ref({
   node8: { name: "عا َلـَة" },
   node9: { name: "محفلّة" },
   node10: { name: "أحمـَر" },
-});
+};
 
-const edges = ref({
+const exampleRelationships = {
   edge1: { source: "node1", target: "node2", label: "PARENT" },
   edge2: { source: "node1", target: "node3", label: "RELATED" },
   edge3: { source: "node1", target: "node4", label: "OPPOSITE" },
@@ -32,7 +43,10 @@ const edges = ref({
   edge7: { source: "node1", target: "node8", label: "CONFUSABLE" },
   edge8: { source: "node1", target: "node9", label: "RHYME" },
   edge9: { source: "node1", target: "node10", label: "GOES_WITH" },
-});
+};
+
+const nodes = ref({});
+const edges = ref({});
 
 const d3ForceEnabled = computed({
   get: () => configs.view.layoutHandler instanceof ForceLayout,
@@ -55,6 +69,7 @@ const configs = reactive(
     node: {
       normal: {
         color: "#aabbff",
+        radius: node => node.size = 10,
       },
     },
     edge: {
@@ -79,9 +94,22 @@ const configs = reactive(
 );
 
 const handleNodeCreated = (node) => {
-  console.log(node);
-  nodes.value[`node${Object.keys(nodes.value).length + 1}`] = node;
-  console.log(nodes.value);
+  console.log("Node created", node);
+  const nodeName = `node${Object.keys(nodes.value).length + 1}`;
+  nodes.value[nodeName] = node;
+  // create small nodes for every relationship type, and connect them to the new node
+  for (const relType of relationshipTypes) {
+    const newNode = {
+      name: relType,
+      size: 5,
+    };
+    const relNodeName = `node${Object.keys(nodes.value).length + 1}`;
+    nodes.value[relNodeName] = newNode;
+    edges.value[`edge${Object.keys(edges.value).length + 1}`] = {
+      source: nodeName,
+      target: relNodeName,
+    };
+  }
 };
 </script>
 
@@ -111,8 +139,7 @@ const handleNodeCreated = (node) => {
       />
     </template>
   </v-network-graph>
-   <NodeCreatorModal @node-created="handleNodeCreated" />
-
+  <NodeCreatorModal @node-created="handleNodeCreated" />
 </template>
 
 <style>
