@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import * as vNG from "v-network-graph";
 import { reactive, computed, ref } from "vue";
+import NodeCreatorModal from "./NodeCreatorModal.vue";
 
 import {
   ForceLayout,
@@ -58,8 +59,8 @@ const configs = reactive(
     edge: {
       label: {
         fontSize: 8,
-        // TODO: autoset to same color as edge
-        color: "#77bff2"
+        // TODO: pm autoset to same color as edge
+        color: "#77bff2",
       },
       normal: {
         color: "#77bff2",
@@ -75,18 +76,19 @@ const configs = reactive(
     },
   })
 );
+
+const handleNodeCreated = (node) => {
+  console.log(node);
+  nodes.value[`node${Object.keys(nodes.value).length + 1}`] = node;
+  console.log(nodes.value);
+};
 </script>
 
 <template>
   <div class="demo-control-panel">
     <div class="form-control">
       <label class="label cursor-pointer">
-        <input
-          type="checkbox"
-          checked="checked"
-          class="checkbox"
-          v-model="d3ForceEnabled"
-        />
+        <input type="checkbox" class="checkbox" v-model="d3ForceEnabled" />
 
         <span class="ml-2 label-text">Enable Force Layout</span>
       </label>
@@ -108,6 +110,8 @@ const configs = reactive(
       />
     </template>
   </v-network-graph>
+   <NodeCreatorModal @node-created="handleNodeCreated" />
+
 </template>
 
 <style>
