@@ -20,30 +20,23 @@ const relationshipTypes = [
   "RHYME",
 ];
 
-const exampleNodes = {
-  node1: { name: "بـِسكيلـِتّـَة — bicycle" },
-  node2: { name: "و َسيلـِة ا ِلنـَقل" },
-  node3: { name: "مَشـاة  " },
-  node4: { name: "عـَر َبـِيـَة" },
-  node5: { name: "عـَجـَل" },
-  node6: { name: "البسكلتة دي بتاعتي." },
-  node7: { name: "السيارات حلت محل الدراجات." },
-  node8: { name: "عا َلـَة" },
-  node9: { name: "محفلّة" },
-  node10: { name: "أحمـَر" },
-};
+const exampleNodes = [
+  { name: "بـِسكيلـِتّـَة — bicycle", size: 30 }, // bicycle
+  { name: "و َسيلـِة ا ِلنـَقل", size: 30 }, // vehicle
+  { name: "مَشـاة  ", size: 30 }, // pedestrian
+];
 
-const exampleRelationships = {
-  edge1: { source: "node1", target: "node2", label: "PARENT" },
-  edge2: { source: "node1", target: "node3", label: "RELATED" },
-  edge3: { source: "node1", target: "node4", label: "OPPOSITE" },
-  edge4: { source: "node1", target: "node5", label: "CHILD" },
-  edge5: { source: "node1", target: "node6", label: "EXAMPLE" },
-  edge6: { source: "node1", target: "node7", label: "EXAMPLE" },
-  edge7: { source: "node1", target: "node8", label: "CONFUSABLE" },
-  edge8: { source: "node1", target: "node9", label: "RHYME" },
-  edge9: { source: "node1", target: "node10", label: "GOES_WITH" },
-};
+
+const exampleRelationships = [
+  {
+    from: exampleNodes[0].name + "_PARENT",
+    to: exampleNodes[1].name + "_CHILD",
+  },
+  {
+    from: exampleNodes[0].name + "_RELATED",
+    to: exampleNodes[2].name + "_RELATED",
+  },
+];
 
 const nodes = ref({});
 const edges = ref({});
@@ -69,7 +62,7 @@ const configs = reactive(
     node: {
       normal: {
         color: "#aabbff",
-        radius: node => node.size = 10,
+        radius: (node) => node.size,
       },
     },
     edge: {
@@ -85,32 +78,49 @@ const configs = reactive(
         color: "#368fce",
       },
 
-      margin: 12,
-      marker: {
-        target: { type: "arrow" },
-      },
+      margin: 3,
+      // marker: {
+      //   target: { type: "arrow" },
+      // },
     },
   })
 );
 
 const handleNodeCreated = (node) => {
   console.log("Node created", node);
-  const nodeName = `node${Object.keys(nodes.value).length + 1}`;
-  nodes.value[nodeName] = node;
+  nodes.value[node.name] = node;
   // create small nodes for every relationship type, and connect them to the new node
   for (const relType of relationshipTypes) {
     const newNode = {
       name: relType,
       size: 5,
     };
-    const relNodeName = `node${Object.keys(nodes.value).length + 1}`;
+    const relNodeName = node.name + "_" + relType;
     nodes.value[relNodeName] = newNode;
     edges.value[`edge${Object.keys(edges.value).length + 1}`] = {
-      source: nodeName,
+      source: node.name,
       target: relNodeName,
     };
   }
 };
+
+// onmounted, if no nodes, add example nodes one by one
+onMounted(() => {
+  if (Object.keys(nodes.value).length === 0) {
+    for (const nodeName in exampleNodes) {
+      handleNodeCreated(exampleNodes[nodeName]);
+    }
+
+    for (const relationship of exampleRelationships) {
+      edges.value[`edge${Object.keys(edges.value).length + 1}`] = {
+        source: relationship.from,
+        target: relationship.to,
+        label: "",
+      };
+      console.log("created relationship", relationship);
+    }
+  }
+});
 </script>
 
 <template>
@@ -139,6 +149,12 @@ const handleNodeCreated = (node) => {
       />
     </template>
   </v-network-graph>
+  {{ nodes }}
+  <br />
+  <br />
+  <br />
+  <br />
+  {{ edges }}
   <NodeCreatorModal @node-created="handleNodeCreated" />
 </template>
 
